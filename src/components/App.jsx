@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Films from './Films';
+import People from './People';
 
 class App extends Component {
     constructor(props) {
@@ -9,24 +11,8 @@ class App extends Component {
 
         this.state = {
             showFilms: false,
-            showPeople: false,
-            filmsList: [],
-            peopleList: []
+            showPeople: false
         };
-    }
-
-    componentDidMount() {
-        if (!this.state.showFilms) {
-            fetch("https://ghibliapi.herokuapp.com/films")
-            .then(response => response.json())
-            .then(films => this.setState({ filmsList: films }));
-        }
-
-        if (!this.state.showPeople) {
-            fetch("https://ghibliapi.herokuapp.com/people")
-            .then(response => response.json())
-            .then(people => this.setState({ peopleList: people }));
-        }
     }
 
     seeFilms() {
@@ -40,44 +26,11 @@ class App extends Component {
     render() {
         if (this.state.showPeople) {
             return (
-                <React.Fragment>
-                    <div>
-                        <button onClick={this.seePeople} className="btn btn-danger mb-5">Return to home?</button>
-                    </div>
-                    {this.state.peopleList.map(person => (
-                        <div key={person.id} className="card text-center">
-                            <div className="card-body">
-                                <h3 className="card-title">{person.name}</h3>
-                                <h5>Age: {person.age}</h5>
-                                <h5>Gender: {person.gender}</h5>
-                                <p className="card-text"><small className="text-muted">Hair color {person.hair_color}</small></p>
-                                <p className="card-text"><small className="text-muted">Eye color: {person.eye_color}</small></p>
-                                <a href={person.url} className="btn btn-danger">See my full info here:</a>
-                            </div>
-                        </div>
-                    ))}
-                </React.Fragment>
+                <People goHome={this.seePeople} />
             );
         } else if (this.state.showFilms) {
             return (
-                <React.Fragment>
-                    <div>
-                        <button onClick={this.seeFilms} className="btn btn-danger mb-5">Return to home?</button>
-                    </div>
-                    {this.state.filmsList.map(film => (
-                        <div key={film.id} className="card text-center">
-                            <div className="card-body">
-                                <h3 className="card-title">{film.title}</h3>
-                                <h5>Directed by: {film.director}</h5>
-                                <h5>Produced by: {film.producer}</h5>
-                                <p className="card-text">{film.description}</p>
-                                <p className="card-text"><small className="text-muted">Released in {film.release_date}</small></p>
-                                <p className="card-text"><small className="text-muted">Rotten Tomatoes Rating: {film.rt_score}/100</small></p>
-                                <a href={"http://www.google.com/search?q=" + film.title} className="btn btn-danger">Check it out on Google.</a>
-                            </div>
-                        </div>
-                    ))}
-                </React.Fragment>
+                <Films goHome={this.seeFilms} />
             );
         } else {
             return (
@@ -87,7 +40,7 @@ class App extends Component {
                         <button onClick={this.seeFilms} className="btn btn-danger mt-5 mr-2">See films?</button>
                         <button onClick={this.seePeople} className="btn btn-danger mt-5 ml-2">See people?</button>
                     </div>
-                </React.Fragment>
+                </React.Fragment>   
             );
         }
     }
